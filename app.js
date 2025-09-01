@@ -64,3 +64,26 @@ async function deletePuppy(id) {
 
 // === COMPONENTS ===
 
+/** Form to create a new puppy */
+function CreatePuppyForm(){
+    const form = document.createElement("form");
+    form.innerHTML = `
+    <h3>Add a New Puppy</h3>
+    <label>Name: <input type="text" name="name" required> </label>
+    <label>Breed: <input type="text" name="breed" required> </label>
+    <button type="submit">Add Puppy</button>
+    `;
+
+    form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const formData = new FormData(form);
+        const newPuppy = {
+            name: form.Data.get("name"),
+            breed: formData.get("breed"),
+        };
+        await createPuppy(newPuppy);
+        form.reset();
+    });
+
+    return form;
+}
