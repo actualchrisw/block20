@@ -78,7 +78,7 @@ function CreatePuppyForm(){
         e.preventDefault();
         const formData = new FormData(form);
         const newPuppy = {
-            name: form.Data.get("name"),
+            name: formData.get("name"),
             breed: formData.get("breed"),
         };
         await createPuppy(newPuppy);
