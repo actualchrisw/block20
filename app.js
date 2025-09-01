@@ -87,3 +87,18 @@ function CreatePuppyForm(){
 
     return form;
 }
+
+/** Puppy List Item */
+function PuppyListItem(puppy) {
+    const li = document.createElement("li");
+    if (puppy.id === selectedPuppy?.id) li.classList.add("selected");
+
+    li.innerHTML = `
+        <img src="${puppy.imageUrl}" alt="${puppy.name}" width="100%">
+        <p>${puppy.name}</p>
+    `;
+
+    li.addEventListener("click"), () => getPuppy(puppy.id));
+
+    return li;
+}
