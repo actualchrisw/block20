@@ -32,3 +32,58 @@ async function getPuppy(id) {
     console.error(e);
   }
 }
+
+/** Create a new puppy */
+async function createPuppy(puppyData) {
+  try {
+    const response = await fetch(API + "/players", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(puppyData),
+    });
+    if (!response.ok) throw new Error("Failed to create puppy");
+    await getPuppies();
+  } catch (e) {
+    console.error(e);
+  }
+}
+
+/** Delete the selected puppy */
+async function deletePuppy(id) {
+  try {
+    const response = await fetch(API + "/players/" + id, {
+      method: "DELETE",
+    });
+    if (!response.ok) throw new Error("Failed to delete puppy");
+    selectedPuppy = null;
+    await getPuppies();
+  } catch (e) {
+    console.error(e);
+  }
+}
+
+// === COMPONENTS ===
+
+/** Form to create a new puppy */
+function CreatePuppyForm() {
+  const form = document.createElement("form");
+  form.innerHTML = `
+    <h3>Add a New Puppy</h3>
+    <label> Name: <input type="text" name="name" required> </label>
+    <label> Breed: <input type="text" name="breed" required> </label>
+    <button type="submit">Add Puppy</button>
+  `;
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const formData = new FormData(form);
+    const newPuppy = {
+      name: formData.get("name"),
+      breed: formData.get("breed"),
+    };
+    await createPuppy(newPuppy);
+    form.reset();
+  });
+
+  return form;
+}
