@@ -98,7 +98,75 @@ function PuppyListItem(puppy) {
         <p>${puppy.name}</p>
     `;
 
-    li.addEventListener("click"), () => getPuppy(puppy.id));
+  li.addEventListener("click", () => getPuppy(puppy.id));
 
     return li;
 }
+
+/** List of all puppies */
+function PuppyList(){
+    const ul = document.createElement("ul");
+    ul.classList.add("puppies");
+    const listItems = puppies.map(PuppyListItem);
+    ul.replaceChildren(...listItems);
+    return ul;
+}
+
+/** Details for selected puppy */
+function SelectedPuppy() {
+    const section = document.createElement("section");
+
+    if (!selectedPuppy) {
+        section.textContent = "Please select a puppy to see details.";
+        return section;
+    }
+
+    section.innerHTML = `
+    <h3>${selectedPuppy.name} #${selectedPuppy.id}</h3>
+    <img src="${selectedPuppy.imageUrl}" alt="${selectedPuppy.name}" width="200">
+    <p><strong>Breed:</strong> ${selectedPuppy.breed}</p>
+    <p><strong>Status:</strong> ${selectedPuppy.status}</p>
+    <p><strong>Team:</strong> ${selectedPuppy.team?.name || "Unassigned"}</p>
+    <button class="delete-btn">Remove from roster</button>
+  `;
+
+  section.querySelector(".delete-btn").addEventListener("click", () => {
+    if (confirm("Are you sure you want to remove this puppy?")) {
+      deletePuppy(selectedPuppy.id);
+    }
+  });
+
+  return section;
+}
+
+// === RENDER ===
+function render() {
+    const app = document.querySelector("#app");
+
+   app.innerHTML = `
+    <h1>Puppy Bowl</h1>
+    <main>
+      <section id="form-section"></section>
+      <section>
+        <h2>Roster</h2>
+        <PuppyList></PuppyList>
+      </section>
+      <section id="selected">
+        <h2>Puppy Details</h2>
+        <SelectedPuppy></SelectedPuppy>
+      </section>
+    </main>
+  `;
+
+  app.querySelector("#form-section").appendChild(CreatePuppyForm());
+  app.querySelector("PuppyList").replaceWith(PuppyList());
+  app.querySelector("SelectedPuppy").replaceWith(SelectedPuppy());
+}
+
+// === INIT ===
+async function init() {
+  await getPuppies();
+  render();
+}
+
+init();
